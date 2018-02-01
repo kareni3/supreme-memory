@@ -1,11 +1,18 @@
-CONFIG = {
-  # 'mode': 'wsgi'
-  'working_dir': '/home/box/web/hello.py',
-  # 'python': '/usr/bin/python',
-  'args': (
-    # '--bind=0.0.0.0:8080',
-    '--workers=16',
-    '--timeout=60',
-    'app.module',
-  ),
-}
+def app(environ, start_response):
+
+	
+	raw_uri = str(environ.get('RAW_URI'))
+	
+	raw_uri = raw_uri[2:]
+
+	params = raw_uri.split('&')
+	
+	data = ''
+	for param in params:
+		data += param + '\r\n'
+	
+	start_response("200 OK", [
+	  ("Content-Type", "text/plain"),
+	  ("Content-Length", str(len(data)))
+	])
+	return iter([data])
